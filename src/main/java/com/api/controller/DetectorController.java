@@ -3,38 +3,37 @@ package com.api.controller;
 import com.api.entity.Detector;
 import com.api.service.DetectorService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/detector")
+@AllArgsConstructor
 public class DetectorController {
-    @Autowired
     private DetectorService detectorService;
 
     @GetMapping("")
-    public ResponseEntity<List<Detector>> getAllDetectors() throws IOException {
+    public ResponseEntity<List<Detector>> getAllDetectors() {
         List<Detector> detectors = detectorService.getAll();
         if (detectors.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(detectors, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Detector> getDetector(@PathVariable("id") Long id) throws IOException {
-        Detector detector = detectorService.getDetectorById(id);
+    @GetMapping("/{serialNumber}")
+    public ResponseEntity<Detector> getDetector(@PathVariable("serialNumber") String serialNumber) {
+        Detector detector = detectorService.getDetectorBySerialNumber(serialNumber);
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(detector, HttpStatus.OK);
     }
 
-    @PostMapping("/initialize")
+    @PutMapping("/{serialNumber}/initialized")
     public ResponseEntity<Detector> initializeDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -43,7 +42,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/activate")
+    @PutMapping("/{serialNumber}/active")
     public ResponseEntity<Detector> activateDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -52,7 +51,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/setup")
+    @PutMapping("/{serialNumber}/setup")
     public ResponseEntity<Detector> setupDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -61,8 +60,8 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/reset")
-    public ResponseEntity<Detector> resetDetector(@RequestBody @Valid Detector detector) throws IOException {
+    @PutMapping("/{serialNumber}/reset")
+    public ResponseEntity<Detector> resetDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

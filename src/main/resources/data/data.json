@@ -5,7 +5,7 @@
     "serialNumber": "ABC-134",
     "model": "V1",
     "address": "ул. Пушкина",
-    "gpsCoordinate": {
+    "location": {
       "latitude": 34,
       "longitude": 25
     },
@@ -33,7 +33,7 @@
     "serialNumber": "XYZ-281",
     "model": "V2",
     "address": "ул. Лермонтова",
-    "gpsCoordinate": {
+    "location": {
       "latitude": 45,
       "longitude": 16
     },

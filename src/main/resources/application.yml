@@ -1,0 +1,15 @@
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  data:
+    mongodb:
+      authentication-database: admin
+#      username: mongo
+#      password: mongo
+      database: detector-api
+      port: 27018
+      host: localhost
+logging:
+  level:
+    org:
+      springframework: ERROR

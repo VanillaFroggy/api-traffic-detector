@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+#  app:
+#    container_name: api-traffic-detector
+#    restart: always
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mongo
+
+  mongo:
+    container_name: mongoDetectorDB
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: "api-detector"
+    volumes:
+      - ./mongoVolume:/data/db
