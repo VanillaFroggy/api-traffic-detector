@@ -2,7 +2,6 @@ package com.api.service;
 
 import com.api.entity.*;
 import com.api.repo.DetectorRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,23 +9,19 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class DetectorService {
-//    private final static String DATA_SOURCE = "src/main/resources/data/data.json";
     private DetectorRepository detectorRepository;
-//     TODO сделать логику в DetectorService, задействуя логику проверки состояния из модели
 
     public Detector getDetectorBySerialNumber(String serialNumber) {
         log.info("IN DetectorService getDetectorById() {}", serialNumber);
-        Detector detector = detectorRepository.findById(serialNumber).orElse(null);
-        if (detector == null) {
-            detector = getNewBuiltDetector(serialNumber);
-            detectorRepository.save(detector);
-        }
-        return detector;
+        return detectorRepository
+                .findById(serialNumber)
+                .orElseThrow(NullPointerException::new);
     }
 
     public Detector initialize(Detector detector) {
@@ -34,16 +29,14 @@ public class DetectorService {
         Detector detectorFromDB = detectorRepository
                 .findById(detector.getSerialNumber())
                 .orElse(null);
-        if (detectorFromDB == null) {
-            detector = Detector
-                    .builder()
-                    .serialNumber(detector.getSerialNumber())
-                    .state(detector.getState())
-                    .model(detector.getModel())
-                    .build();
-        }
-        if (!detector.isNew())
+        if (detectorFromDB == null)
+            detectorFromDB = getNewBuiltDetector(detector.getSerialNumber());
+        if (!detector.isNew()
+                || (Objects.nonNull(detector.getAddress()) && !detector.getAddress().equals(detectorFromDB.getAddress()))
+                || (Objects.nonNull(detector.getLocation()) && !detector.getLocation().equals(detectorFromDB.getLocation()))
+                || (Objects.nonNull(detector.getZone()) && !detector.getZone().equals(detectorFromDB.getZone()))) {
             throw new IllegalArgumentException();
+        }
         detector.setState(State.SETUP);
         detectorRepository.save(detector);
         return detector;
@@ -51,13 +44,34 @@ public class DetectorService {
 
     public Detector activate(Detector detector) {
         log.info("IN DetectorService activate() {}", detector);
+        Detector detectorFromDB = detectorRepository
+                .findById(detector.getSerialNumber())
+                .orElseThrow(NullPointerException::new);
+        if (!detector.isSetup()
+                || ((Objects.nonNull(detector.getSerialNumber()) || Objects.nonNull(detectorFromDB.getSerialNumber()))
+                && !detector.getSerialNumber().equals(detectorFromDB.getSerialNumber()))
+                || ((Objects.nonNull(detector.getModel()) || Objects.nonNull(detectorFromDB.getModel()))
+                && !detector.getModel().equals(detectorFromDB.getModel()))
+                || ((Objects.nonNull(detector.getConformityCertificate()) || Objects.nonNull(detectorFromDB.getConformityCertificate()))
+                && !detector.getConformityCertificate().equals(detectorFromDB.getConformityCertificate()))
+                || ((Objects.nonNull(detector.getLocation()) || Objects.nonNull(detector.getZone()))
+                && isDistanceMoreThanThreeHundred(detector))) {
+            throw new IllegalArgumentException();
+        }
         detector.setState(State.ACTIVE);
+        detectorRepository.save(detector);
         return detector;
     }
 
     public Detector setup(Detector detector) {
         log.info("IN DetectorService setup() {}", detector);
+        detectorRepository
+                .findById(detector.getSerialNumber())
+                .orElseThrow(NullPointerException::new);
+        if (!detector.isActive())
+            throw new IllegalArgumentException();
         detector.setState(State.SETUP);
+        detectorRepository.save(detector);
         return detector;
     }
 
@@ -65,7 +79,7 @@ public class DetectorService {
         log.info("IN DetectorService reset() {}", detector);
         detectorRepository.delete(detector);
         detector = getNewBuiltDetector(detector.getSerialNumber());
-//        detector.setState(State.NEW);
+        detectorRepository.save(detector);
         return detector;
     }
 
@@ -80,18 +94,18 @@ public class DetectorService {
                 .builder()
                 .serialNumber(serialNumber)
                 .state(State.NEW)
-                .model("V1")
+                .model("")
                 .conformityCertificate(
-                        new Detector.ConformityCertificate("123", LocalDate.now())
+                        new Detector.ConformityCertificate("", LocalDate.now())
                 )
-                .address("New st.")
+                .address("")
                 .location(
                         new GpsCoordinate(0.0, 0.0)
                 )
                 .zone(
                         new Zone(
                                 new GpsCoordinate(0.0, 0.0),
-                                "Russia",
+                                "",
                                 new ArrayList<>(List.of(
                                         new Point(0, 0),
                                         new Point(0, 0)
@@ -99,5 +113,14 @@ public class DetectorService {
                         )
                 )
                 .build();
+    }
+
+    private boolean isDistanceMoreThanThreeHundred(Detector detector) {
+        return Math.abs(
+                Math.sqrt(
+                        Math.pow((detector.getLocation().getLatitude() - detector.getZone().getGpsCoordinate().getLatitude()), 2)
+                                + Math.pow((detector.getLocation().getLongitude() - detector.getZone().getGpsCoordinate().getLongitude()), 2)
+                )
+        ) > 300;
     }
 }

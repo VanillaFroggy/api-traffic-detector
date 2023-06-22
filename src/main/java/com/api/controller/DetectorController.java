@@ -33,7 +33,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, HttpStatus.OK);
     }
 
-    @PutMapping("/{serialNumber}/initialized")
+    @PutMapping("/initialized")
     public ResponseEntity<Detector> initializeDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -42,7 +42,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/{serialNumber}/active")
+    @PutMapping("/active")
     public ResponseEntity<Detector> activateDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -51,7 +51,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/{serialNumber}/setup")
+    @PutMapping("/setup")
     public ResponseEntity<Detector> setupDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
@@ -60,7 +60,7 @@ public class DetectorController {
         return new ResponseEntity<>(detector, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/{serialNumber}/reset")
+    @PutMapping("/reset")
     public ResponseEntity<Detector> resetDetector(@RequestBody @Valid Detector detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)

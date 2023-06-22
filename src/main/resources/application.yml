@@ -4,11 +4,11 @@ spring:
   data:
     mongodb:
       authentication-database: admin
-#      username: mongo
-#      password: mongo
       database: detector-api
-      port: 27018
-      host: localhost
+      port: 27017
+#      host: localhost
+#    datasource:
+#      url: jdbc://localhost:27017/detector-api
 logging:
   level:
     org:
