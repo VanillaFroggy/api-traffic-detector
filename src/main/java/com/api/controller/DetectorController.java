@@ -1,5 +1,9 @@
 package com.api.controller;
 
+import com.api.dto.DetectorActivateDTO;
+import com.api.dto.DetectorInitializeDTO;
+import com.api.dto.DetectorResetDTO;
+import com.api.dto.DetectorSetupDTO;
 import com.api.entity.Detector;
 import com.api.service.DetectorService;
 import jakarta.validation.Valid;
@@ -34,7 +38,7 @@ public class DetectorController {
     }
 
     @PutMapping("/initialized")
-    public ResponseEntity<Detector> initializeDetector(@RequestBody @Valid Detector detector) {
+    public ResponseEntity<DetectorInitializeDTO> initializeDetector(@RequestBody @Valid DetectorInitializeDTO detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -43,7 +47,7 @@ public class DetectorController {
     }
 
     @PutMapping("/active")
-    public ResponseEntity<Detector> activateDetector(@RequestBody @Valid Detector detector) {
+    public ResponseEntity<DetectorActivateDTO> activateDetector(@RequestBody @Valid DetectorActivateDTO detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -52,7 +56,7 @@ public class DetectorController {
     }
 
     @PutMapping("/setup")
-    public ResponseEntity<Detector> setupDetector(@RequestBody @Valid Detector detector) {
+    public ResponseEntity<DetectorSetupDTO> setupDetector(@RequestBody @Valid DetectorSetupDTO detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -61,7 +65,7 @@ public class DetectorController {
     }
 
     @PutMapping("/reset")
-    public ResponseEntity<Detector> resetDetector(@RequestBody @Valid Detector detector) {
+    public ResponseEntity<DetectorResetDTO> resetDetector(@RequestBody @Valid DetectorResetDTO detector) {
         HttpHeaders headers = new HttpHeaders();
         if (detector == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

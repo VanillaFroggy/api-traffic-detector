@@ -1,9 +1,14 @@
 package com.api.service;
 
+import com.api.dto.DetectorActivateDTO;
+import com.api.dto.DetectorInitializeDTO;
+import com.api.dto.DetectorResetDTO;
+import com.api.dto.DetectorSetupDTO;
 import com.api.entity.*;
 import com.api.repo.DetectorRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +21,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class DetectorService {
     private DetectorRepository detectorRepository;
+    private ModelMapper modelMapper;
 
     public Detector getDetectorBySerialNumber(String serialNumber) {
         log.info("IN DetectorService getDetectorById() {}", serialNumber);
@@ -24,47 +30,40 @@ public class DetectorService {
                 .orElseThrow(NullPointerException::new);
     }
 
-    public Detector initialize(Detector detector) {
-        log.info("IN DetectorService initialize() {}", detector);
-        Detector detectorFromDB = detectorRepository
-                .findById(detector.getSerialNumber())
-                .orElse(null);
-        if (detectorFromDB == null)
-            detectorFromDB = getNewBuiltDetector(detector.getSerialNumber());
-        if (!detector.isNew()
-                || (Objects.nonNull(detector.getAddress()) && !detector.getAddress().equals(detectorFromDB.getAddress()))
-                || (Objects.nonNull(detector.getLocation()) && !detector.getLocation().equals(detectorFromDB.getLocation()))
-                || (Objects.nonNull(detector.getZone()) && !detector.getZone().equals(detectorFromDB.getZone()))) {
+    public DetectorInitializeDTO initialize(DetectorInitializeDTO detectorDto) {
+        log.info("IN DetectorService initialize() {}", detectorDto);
+        Detector detector = modelMapper.map(detectorDto, Detector.class);
+        if (detector == null) {
+            detector = getNewBuiltDetector(detectorDto.getSerialNumber());
+        } else if (!detector.isNew()) {
             throw new IllegalArgumentException();
         }
         detector.setState(State.SETUP);
         detectorRepository.save(detector);
-        return detector;
+        return modelMapper.map(detector, DetectorInitializeDTO.class);
     }
 
-    public Detector activate(Detector detector) {
-        log.info("IN DetectorService activate() {}", detector);
+    public DetectorActivateDTO activate(DetectorActivateDTO detectorDto) {
+        log.info("IN DetectorService activate() {}", detectorDto);
+        Detector detector = modelMapper.map(detectorDto, Detector.class);
         Detector detectorFromDB = detectorRepository
-                .findById(detector.getSerialNumber())
+                .findById(detectorDto.getSerialNumber())
                 .orElseThrow(NullPointerException::new);
         if (!detector.isSetup()
                 || ((Objects.nonNull(detector.getSerialNumber()) || Objects.nonNull(detectorFromDB.getSerialNumber()))
                 && !detector.getSerialNumber().equals(detectorFromDB.getSerialNumber()))
-                || ((Objects.nonNull(detector.getModel()) || Objects.nonNull(detectorFromDB.getModel()))
-                && !detector.getModel().equals(detectorFromDB.getModel()))
-                || ((Objects.nonNull(detector.getConformityCertificate()) || Objects.nonNull(detectorFromDB.getConformityCertificate()))
-                && !detector.getConformityCertificate().equals(detectorFromDB.getConformityCertificate()))
                 || ((Objects.nonNull(detector.getLocation()) || Objects.nonNull(detector.getZone()))
                 && isDistanceMoreThanThreeHundred(detector))) {
             throw new IllegalArgumentException();
         }
         detector.setState(State.ACTIVE);
         detectorRepository.save(detector);
-        return detector;
+        return modelMapper.map(detector, DetectorActivateDTO.class);
     }
 
-    public Detector setup(Detector detector) {
-        log.info("IN DetectorService setup() {}", detector);
+    public DetectorSetupDTO setup(DetectorSetupDTO detectorDto) {
+        log.info("IN DetectorService setup() {}", detectorDto);
+        Detector detector = modelMapper.map(detectorDto, Detector.class);
         detectorRepository
                 .findById(detector.getSerialNumber())
                 .orElseThrow(NullPointerException::new);
@@ -72,15 +71,16 @@ public class DetectorService {
             throw new IllegalArgumentException();
         detector.setState(State.SETUP);
         detectorRepository.save(detector);
-        return detector;
+        return modelMapper.map(detector, DetectorSetupDTO.class);
     }
 
-    public Detector reset(Detector detector) {
-        log.info("IN DetectorService reset() {}", detector);
+    public DetectorResetDTO reset(DetectorResetDTO detectorDto) {
+        log.info("IN DetectorService reset() {}", detectorDto);
+        Detector detector = modelMapper.map(detectorDto, Detector.class);
         detectorRepository.delete(detector);
-        detector = getNewBuiltDetector(detector.getSerialNumber());
+        detector = getNewBuiltDetector(detectorDto.getSerialNumber());
         detectorRepository.save(detector);
-        return detector;
+        return modelMapper.map(detector, DetectorResetDTO.class);
     }
 
     public List<Detector> getAll() {
