@@ -1,4 +1,4 @@
-package com.api.entity;
+package com.api.infrustructure.persistance.entity;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

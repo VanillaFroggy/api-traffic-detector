@@ -1,10 +1,16 @@
-FROM maven:3.8.4-openjdk-17 as builder
-WORKDIR /app
-COPY . /app/.
-RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true
+FROM openjdk:17-oracle
 
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=builder /app/target/*.jar /app/*.jar
+ENV JAVA_OPTS="-Xmx256m"
+
+ADD target/api-traffic-detector*.jar app.jar
+
+COPY entrypoint.sh entrypoint.sh
+
+RUN apk add --no-cache tzdata; \
+  cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime; \
+  echo "Europe/Moscow" >  /etc/timezone; \
+  chmod 755 /entrypoint.sh
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+
+ENTRYPOINT ["./entrypoint.sh"]
