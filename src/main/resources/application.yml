@@ -6,9 +6,6 @@ spring:
       authentication-database: admin
       database: detector-api
       port: 27017
-#      host: localhost
-#    datasource:
-#      url: jdbc://localhost:27017/detector-api
 logging:
   level:
     org:

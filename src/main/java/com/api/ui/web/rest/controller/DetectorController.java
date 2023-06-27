@@ -22,8 +22,6 @@ public class DetectorController {
     @GetMapping("")
     public ResponseEntity<List<Detector>> getAllDetectors() {
         List<Detector> detectors = detectorService.getAll();
-        if (detectors.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(detectors, HttpStatus.OK);
     }
 

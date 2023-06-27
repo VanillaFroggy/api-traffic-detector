@@ -11,9 +11,6 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = ComponentModel.SPRING)
 public interface DetectorRestMapper {
-  @Mapping(target = "serialNumber", source = "request.serialNumber")
-  @Mapping(target = "model", source = "request.model")
-  @Mapping(target = "conformityCertificate", source = "request.conformityCertificate")
   DetectorInitializeDTO initializeRequestToDto(DetectorInitializeRequest request);
 
   @Mapping(target = "serialNumber", source = "serialNumber")

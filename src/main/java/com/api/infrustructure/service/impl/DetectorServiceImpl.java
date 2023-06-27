@@ -1,18 +1,19 @@
 package com.api.infrustructure.service.impl;
 
-import com.api.infrustructure.service.mapper.DetectorServiceMapper;
 import com.api.infrustructure.persistance.entity.Detector;
 import com.api.infrustructure.persistance.entity.State;
 import com.api.infrustructure.persistance.repo.DetectorRepository;
 import com.api.infrustructure.service.DetectorService;
 import com.api.infrustructure.service.dto.DetectorActivateDTO;
 import com.api.infrustructure.service.dto.DetectorInitializeDTO;
+import com.api.infrustructure.service.mapper.DetectorServiceMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -78,6 +79,8 @@ public class DetectorServiceImpl implements DetectorService {
         Detector detector = detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
+        if (!detector.isSetup())
+            throw new IllegalArgumentException();
         detectorRepository.delete(detector);
         detector = getNewBuiltDetector(serialNumber);
         detectorRepository.save(detector);
@@ -86,7 +89,10 @@ public class DetectorServiceImpl implements DetectorService {
     @Override
     public List<Detector> getAll() {
         log.info("IN DetectorServiceImpl getAll() {}");
-        return detectorRepository.findAll();
+        List<Detector> detectors = detectorRepository.findAll();
+        if (detectors.isEmpty())
+            throw new NoSuchElementException();
+        return detectors;
     }
 
     private Detector getNewBuiltDetector(String serialNumber) {
