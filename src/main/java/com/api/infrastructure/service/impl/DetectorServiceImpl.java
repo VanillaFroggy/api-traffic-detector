@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-//@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DetectorServiceImpl implements DetectorService {
@@ -23,7 +22,6 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public Detector getDetectorBySerialNumber(@Valid String serialNumber) {
-//        log.info("IN DetectorServiceImpl getDetectorById() {}", serialNumber);
         return detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
@@ -31,15 +29,11 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void initialize(@Valid DetectorInitializeDTO dto) {
-//        log.info("IN DetectorServiceImpl initialize() {}", dto);
         Detector detectorFromDB = detectorRepository
                 .findById(dto.getSerialNumber())
                 .orElse(null);
-        if (detectorFromDB == null) {
-            detectorFromDB = getNewBuiltDetector(dto.getSerialNumber());
-        } else if (!detectorFromDB.isNew()) {
+        if (detectorFromDB != null && !detectorFromDB.isNew())
             throw new IllegalArgumentException();
-        }
         Detector detector = mapper.initializeDtoToEntity(dto);
         detector.setState(State.SETUP);
         detectorRepository.save(detector);
@@ -47,22 +41,19 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void activate(@Valid DetectorActivateDTO dto) {
-//        log.info("IN DetectorServiceImpl activate() {}", dto);
         Detector detectorFromDB = detectorRepository
                 .findById(dto.getSerialNumber())
                 .orElseThrow(NullPointerException::new);
         Detector detector = mapper.activateDtoToEntity(dto);
         detector.setState(detectorFromDB.getState());
-        if (!detector.isSetup() && !isDistanceMoreThanThreeHundred(detector)) {
+        if (!detector.isSetup() && !isDistanceMoreThanThreeHundred(detector))
             throw new IllegalArgumentException();
-        }
         detector.setState(State.ACTIVE);
         detectorRepository.save(detector);
     }
 
     @Override
     public void setup(String serialNumber) {
-//        log.info("IN DetectorServiceImpl setup() {}", serialNumber);
         Detector detector = detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
@@ -74,33 +65,25 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void reset(String serialNumber) {
-//        log.info("IN DetectorServiceImpl reset() {}", serialNumber);
         Detector detector = detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
         if (!detector.isSetup())
             throw new IllegalArgumentException();
         detectorRepository.delete(detector);
-        detector = getNewBuiltDetector(serialNumber);
+        detector = Detector.builder()
+                .serialNumber(serialNumber)
+                .state(State.NEW)
+                .build();
         detectorRepository.save(detector);
     }
 
     @Override
     public List<Detector> getAll() {
-//        log.info("IN DetectorServiceImpl getAll() {}");
         List<Detector> detectors = detectorRepository.findAll();
         if (detectors.isEmpty())
             throw new NoSuchElementException();
         return detectors;
-    }
-
-    private Detector getNewBuiltDetector(String serialNumber) {
-//        log.info("IN DetectorServiceImpl getNewBuiltDetector() {}", serialNumber);
-        return Detector
-                .builder()
-                .serialNumber(serialNumber)
-                .state(State.NEW)
-                .build();
     }
 
     private boolean isDistanceMoreThanThreeHundred(Detector detector) {
