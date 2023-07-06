@@ -1,6 +1,6 @@
-package com.api.infrustructure.persistance.repo;
+package com.api.infrastructure.persistance.repo;
 
-import com.api.infrustructure.persistance.entity.Detector;
+import com.api.infrastructure.persistance.entity.Detector;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

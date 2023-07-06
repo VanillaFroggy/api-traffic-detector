@@ -1,6 +1,6 @@
 package com.api.ui.web.rest.dto;
 
-import com.api.infrustructure.persistance.entity.Detector;
+import com.api.infrastructure.persistance.entity.Detector;
 import lombok.Data;
 
 @Data

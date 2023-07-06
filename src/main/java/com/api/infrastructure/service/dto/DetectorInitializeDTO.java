@@ -1,6 +1,6 @@
-package com.api.infrustructure.service.dto;
+package com.api.infrastructure.service.dto;
 
-import com.api.infrustructure.persistance.entity.Detector;
+import com.api.infrastructure.persistance.entity.Detector;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

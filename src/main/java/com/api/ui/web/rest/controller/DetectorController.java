@@ -1,7 +1,7 @@
 package com.api.ui.web.rest.controller;
 
-import com.api.infrustructure.persistance.entity.Detector;
-import com.api.infrustructure.service.DetectorService;
+import com.api.infrastructure.persistance.entity.Detector;
+import com.api.infrastructure.service.DetectorService;
 import com.api.ui.web.rest.dto.DetectorActiveRequest;
 import com.api.ui.web.rest.dto.DetectorInitializeRequest;
 import com.api.ui.web.rest.mapper.DetectorRestMapper;

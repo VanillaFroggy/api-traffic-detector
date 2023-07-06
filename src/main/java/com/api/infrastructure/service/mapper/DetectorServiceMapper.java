@@ -1,8 +1,8 @@
-package com.api.infrustructure.service.mapper;
+package com.api.infrastructure.service.mapper;
 
-import com.api.infrustructure.persistance.entity.Detector;
-import com.api.infrustructure.service.dto.DetectorActivateDTO;
-import com.api.infrustructure.service.dto.DetectorInitializeDTO;
+import com.api.infrastructure.persistance.entity.Detector;
+import com.api.infrastructure.service.dto.DetectorActivateDTO;
+import com.api.infrastructure.service.dto.DetectorInitializeDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

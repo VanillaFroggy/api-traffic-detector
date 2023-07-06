@@ -1,4 +1,4 @@
-package com.api.infrustructure.persistance.entity;
+package com.api.infrastructure.persistance.entity;
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;

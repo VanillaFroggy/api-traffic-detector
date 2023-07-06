@@ -1,8 +1,8 @@
-package com.api.infrustructure.service;
+package com.api.infrastructure.service;
 
-import com.api.infrustructure.persistance.entity.Detector;
-import com.api.infrustructure.service.dto.DetectorActivateDTO;
-import com.api.infrustructure.service.dto.DetectorInitializeDTO;
+import com.api.infrastructure.persistance.entity.Detector;
+import com.api.infrastructure.service.dto.DetectorActivateDTO;
+import com.api.infrastructure.service.dto.DetectorInitializeDTO;
 import jakarta.validation.Valid;
 
 import java.util.List;

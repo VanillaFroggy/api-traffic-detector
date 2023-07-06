@@ -1,7 +1,7 @@
 package com.api.ui.web.rest.dto;
 
-import com.api.infrustructure.persistance.entity.GpsCoordinate;
-import com.api.infrustructure.persistance.entity.Zone;
+import com.api.infrastructure.persistance.entity.GpsCoordinate;
+import com.api.infrastructure.persistance.entity.Zone;
 import lombok.Data;
 
 @Data

@@ -1,21 +1,20 @@
-package com.api.infrustructure.service.impl;
+package com.api.infrastructure.service.impl;
 
-import com.api.infrustructure.persistance.entity.Detector;
-import com.api.infrustructure.persistance.entity.State;
-import com.api.infrustructure.persistance.repo.DetectorRepository;
-import com.api.infrustructure.service.DetectorService;
-import com.api.infrustructure.service.dto.DetectorActivateDTO;
-import com.api.infrustructure.service.dto.DetectorInitializeDTO;
-import com.api.infrustructure.service.mapper.DetectorServiceMapper;
+import com.api.infrastructure.persistance.entity.Detector;
+import com.api.infrastructure.persistance.entity.State;
+import com.api.infrastructure.persistance.repo.DetectorRepository;
+import com.api.infrastructure.service.DetectorService;
+import com.api.infrastructure.service.dto.DetectorActivateDTO;
+import com.api.infrastructure.service.dto.DetectorInitializeDTO;
+import com.api.infrastructure.service.mapper.DetectorServiceMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Slf4j
+//@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DetectorServiceImpl implements DetectorService {
@@ -24,7 +23,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public Detector getDetectorBySerialNumber(@Valid String serialNumber) {
-        log.info("IN DetectorServiceImpl getDetectorById() {}", serialNumber);
+//        log.info("IN DetectorServiceImpl getDetectorById() {}", serialNumber);
         return detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
@@ -32,7 +31,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void initialize(@Valid DetectorInitializeDTO dto) {
-        log.info("IN DetectorServiceImpl initialize() {}", dto);
+//        log.info("IN DetectorServiceImpl initialize() {}", dto);
         Detector detectorFromDB = detectorRepository
                 .findById(dto.getSerialNumber())
                 .orElse(null);
@@ -48,7 +47,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void activate(@Valid DetectorActivateDTO dto) {
-        log.info("IN DetectorServiceImpl activate() {}", dto);
+//        log.info("IN DetectorServiceImpl activate() {}", dto);
         Detector detectorFromDB = detectorRepository
                 .findById(dto.getSerialNumber())
                 .orElseThrow(NullPointerException::new);
@@ -63,7 +62,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void setup(String serialNumber) {
-        log.info("IN DetectorServiceImpl setup() {}", serialNumber);
+//        log.info("IN DetectorServiceImpl setup() {}", serialNumber);
         Detector detector = detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
@@ -75,7 +74,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public void reset(String serialNumber) {
-        log.info("IN DetectorServiceImpl reset() {}", serialNumber);
+//        log.info("IN DetectorServiceImpl reset() {}", serialNumber);
         Detector detector = detectorRepository
                 .findById(serialNumber)
                 .orElseThrow(NullPointerException::new);
@@ -88,7 +87,7 @@ public class DetectorServiceImpl implements DetectorService {
 
     @Override
     public List<Detector> getAll() {
-        log.info("IN DetectorServiceImpl getAll() {}");
+//        log.info("IN DetectorServiceImpl getAll() {}");
         List<Detector> detectors = detectorRepository.findAll();
         if (detectors.isEmpty())
             throw new NoSuchElementException();
@@ -96,7 +95,7 @@ public class DetectorServiceImpl implements DetectorService {
     }
 
     private Detector getNewBuiltDetector(String serialNumber) {
-        log.info("IN DetectorServiceImpl getNewBuiltDetector() {}", serialNumber);
+//        log.info("IN DetectorServiceImpl getNewBuiltDetector() {}", serialNumber);
         return Detector
                 .builder()
                 .serialNumber(serialNumber)

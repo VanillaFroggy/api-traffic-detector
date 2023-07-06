@@ -1,8 +1,8 @@
-package com.api.infrustructure.service.dto;
+package com.api.infrastructure.service.dto;
 
 
-import com.api.infrustructure.persistance.entity.GpsCoordinate;
-import com.api.infrustructure.persistance.entity.Zone;
+import com.api.infrastructure.persistance.entity.GpsCoordinate;
+import com.api.infrastructure.persistance.entity.Zone;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.api.ui.web.rest.mapper;
 
-import com.api.infrustructure.service.dto.DetectorActivateDTO;
-import com.api.infrustructure.service.dto.DetectorInitializeDTO;
+import com.api.infrastructure.service.dto.DetectorActivateDTO;
+import com.api.infrastructure.service.dto.DetectorInitializeDTO;
 import com.api.ui.web.rest.dto.DetectorActiveRequest;
 import com.api.ui.web.rest.dto.DetectorInitializeRequest;
 import org.mapstruct.Mapper;
