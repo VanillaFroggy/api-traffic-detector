@@ -46,7 +46,7 @@ public class DetectorServiceImpl implements DetectorService {
                 .orElseThrow(NullPointerException::new);
         Detector detector = mapper.activateDtoToEntity(dto);
         detector.setState(detectorFromDB.getState());
-        if (!detector.isSetup() && !isDistanceMoreThanThreeHundred(detector))
+        if (!detector.isSetup() || isDistanceMoreThanThreeHundred(detector))
             throw new IllegalArgumentException();
         detector.setState(State.ACTIVE);
         detectorRepository.save(detector);
