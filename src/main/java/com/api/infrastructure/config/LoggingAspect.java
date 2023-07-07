@@ -15,18 +15,19 @@ import java.util.stream.Collectors;
 @Aspect
 @Component
 public class LoggingAspect {
-    @Pointcut("execution(* com.api.infrastructure.service.impl.DetectorServiceImpl.*(..))")
-    private void callAtServiceImpl() {
+    @Pointcut("execution(* com.api.infrastructure.service.DetectorService.*(..))")
+    private void callAtService() {
     }
 
-    @Before("callAtServiceImpl()")
-    public void beforeServiceImplMethodAdvice(JoinPoint jp) {
+    @Before("callAtService()")
+    public void beforeServiceMethodAdvice(JoinPoint jp) {
         log.info(jp + ", args=[" + getArgs(jp) + "]");
     }
 
-    @AfterThrowing("callAtServiceImpl()")
-    public void afterThrowingServiceImplAdvice(JoinPoint jp) {
+    @AfterThrowing(pointcut = "callAtService()", throwing = "exception")
+    public void afterThrowingServiceAdvice(JoinPoint jp, Throwable exception) {
         log.error(jp + ", args=[" + getArgs(jp) + "]");
+        log.error(exception.toString());
     }
 
     private String getArgs(JoinPoint jp) {
